@@ -107,7 +107,7 @@ def eval_step(model, criterion, data, cell_line_info, drug_fingerprint_info):
 				predicted-input_targets).sum(dim=1)).sum()
 
 			for i in xrange(len(input_targets)):
-				pearson += stats.pearsonr(input_targets[i], predicted[i])[0]
+				pearson += stats.pearsonr(input_targets[i].cpu(), predicted[i].cpu())[0]
 			r_squared += rsquared(input_targets, predicted).sum()
 		
 		step+=1
