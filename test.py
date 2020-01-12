@@ -63,7 +63,7 @@ def eval_step(models, criterion, data, cell_line_info, drug_fingerprint_info):
 			MSE += criterion(input_targets, predicted)
 			CD += 1 - nn.functional.cosine_similarity(input_targets, predicted)[0]
 			ED += torch.sqrt(torch.mul(input_targets - predicted, input_targets - predicted).sum())
-			PC += stats.pearsonr(input_targets[0], predicted[0])[0]
+			PC += stats.pearsonr(input_targets[0].cpu(), predicted[0].cpu())[0]
 			R2 += rsquared(predicted, input_targets).sum()
 
 			step+=1
@@ -156,14 +156,14 @@ def main(dataset_dir):
 	print("NO: [MAE/MSE/CS/ED/PC/R2]: [{:.4f}/{:.4f}/{:.4f}/{:.4f}/{:.4f}/{:.4f}]\n"\
 		.format(MAE, MSE, CD, ED, PC, R2))
 
-	MAE, MSE, CD, ED, PC, R2 = eval_step(models, criterion, OO, 
+	MAE, MSE, CD, ED, PC, R2 = eval_step(models, criterion, ON, 
 	 	   			  pre_treatment, drug_fingerprint_info)
 	sys.stdout.write("\033[F")
 	sys.stdout.write("\033[K")
 	print("ON: [MAE/MSE/CS/ED/PC/R2]: [{:.4f}/{:.4f}/{:.4f}/{:.4f}/{:.4f}/{:.4f}]\n"\
 		.format(MAE, MSE, CD, ED, PC, R2))
 
-	MAE, MSE, CD, ED, PC, R2 = eval_step(models, criterion, OO, 
+	MAE, MSE, CD, ED, PC, R2 = eval_step(models, criterion, NN, 
 	 	   			  pre_treatment, drug_fingerprint_info)
 	sys.stdout.write("\033[F")
 	sys.stdout.write("\033[K")
